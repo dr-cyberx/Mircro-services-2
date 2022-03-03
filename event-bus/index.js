@@ -22,5 +22,5 @@ app.post("/events", async (req, res) => {
 });
 
 app.listen(4005, () => {
-  console.log("The server is up at port 4000");
+  console.log("The server is up at port 4005");
 });
