@@ -9,12 +9,22 @@ app.use(
   })
 );
 
-app.post("/events", (req, res) => {
+app.post("/events", async (req, res) => {
   const { type, data } = req.body;
-  if(type === 'COMMENT_CREATED'){
-      
+  if (type === "COMMENT_CREATED") {
+    const status = data.content.includes("orange") ? "rejected" : "approved";
+
+    await axios.post("http://localhost:4005/events", {
+      type: "COMMENT_MODERATED",
+      data: {
+        id: data.id,
+        postId: data.postId,
+        status,
+        content: data.content,
+      },
+    });
   }
-  res.send("Hello world");
+  res.send({});
 });
 
 app.listen(4003, () => {
