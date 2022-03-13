@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from "react";
-import axios, { AxiosResponse } from "axios";
-import CreateComment from "./CreateComment";
+import axios from "axios";
+import CommentCreate from "./CommentCreate";
 import CommentList from "./CommentList";
 
-const PostList: React.FunctionComponent = (): JSX.Element => {
-  const [posts, setPosts] = useState<any>({});
+const PostList = () => {
+  const [posts, setPosts] = useState({});
 
-  const fetchPosts = async (): Promise<void> => {
-    const res: AxiosResponse<any, any> = await axios.get(
-      "http://localhost:4002/posts"
-    );
-    console.log("res?.data -> ", res?.data);
-    setPosts(res?.data);
+  const fetchPosts = async () => {
+    const res = await axios.get("http://localhost:4002/posts");
+
+    setPosts(res.data);
   };
 
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  const renderPosts: JSX.Element[] = Object.values(posts).map((post: any) => {
+  const renderedPosts = Object.values(posts).map((post) => {
     return (
       <div
         className="card"
@@ -28,7 +26,7 @@ const PostList: React.FunctionComponent = (): JSX.Element => {
         <div className="card-body">
           <h3>{post.title}</h3>
           <CommentList comments={post.comments} />
-          <CreateComment postId={post.id} />
+          <CommentCreate postId={post.id} />
         </div>
       </div>
     );
@@ -36,7 +34,7 @@ const PostList: React.FunctionComponent = (): JSX.Element => {
 
   return (
     <div className="d-flex flex-row flex-wrap justify-content-between">
-      {renderPosts}
+      {renderedPosts}
     </div>
   );
 };

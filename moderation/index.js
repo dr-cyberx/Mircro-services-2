@@ -1,32 +1,30 @@
-const express = require("express");
+const express = require('express');
+const bodyParser = require('body-parser');
+const axios = require('axios');
+
 const app = express();
+app.use(bodyParser.json());
 
-app.use(express.json());
-
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
-
-app.post("/events", async (req, res) => {
+app.post('/events', async (req, res) => {
   const { type, data } = req.body;
-  if (type === "COMMENT_CREATED") {
-    const status = data.content.includes("orange") ? "rejected" : "approved";
 
-    await axios.post("http://localhost:4005/events", {
-      type: "COMMENT_MODERATED",
+  if (type === 'CommentCreated') {
+    const status = data.content.includes('orange') ? 'rejected' : 'approved';
+
+    await axios.post('http://localhost:4005/events', {
+      type: 'CommentModerated',
       data: {
         id: data.id,
         postId: data.postId,
         status,
-        content: data.content,
-      },
+        content: data.content
+      }
     });
   }
+
   res.send({});
 });
 
 app.listen(4003, () => {
-  console.log("The server is up at port 4003");
+  console.log('Listening on 4003');
 });
